@@ -2,11 +2,12 @@
   "name": "link-to-me-next",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.26.1",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "react": "19.2.3",
