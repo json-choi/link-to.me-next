@@ -2,7 +2,7 @@
  * URL 처리 및 리다이렉트 URL 생성 유틸리티 (2025 Revised)
  */
 
-import { YOUTUBE_WEB } from "./constants";
+
 
 /**
  * YouTube URL 패턴 파싱 결과
@@ -24,7 +24,7 @@ interface YouTubeUrlInfo {
  */
 export const parseYouTubeUrl = (rawLink: string): YouTubeUrlInfo => {
     // 1. 강력한 URL 정규화
-    let clean = rawLink
+    const clean = rawLink
         // 앞뒤 공백 제거
         .trim()
         // 앞쪽 슬래시 제거
@@ -63,7 +63,6 @@ export const parseYouTubeUrl = (rawLink: string): YouTubeUrlInfo => {
     if (path === "watch") {
         const params = new URLSearchParams(query);
         const v = params.get("v");
-        const list = params.get("list");
         // watch?v=xxx&list=yyy 형태도 처리 (플레이리스트 내 영상)
         if (v) {
             // list가 있으면 query에서 제외하지 않고 그대로 전달 (영상 + 플레이리스트 컨텍스트)

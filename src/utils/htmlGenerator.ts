@@ -32,10 +32,20 @@ export const generateSocialMetaHtml = (
     const url = escapeHtml(metadata.url);
     const safeRedirectUrl = escapeHtml(redirectUrl);
 
-    // 콘텐츠 타입에 따른 OG type 설정
-    const ogType = metadata.type === "video" || metadata.type === "shorts" || metadata.type === "live" 
-        ? "video.other" 
-        : "website";
+    const isVideo = metadata.type === "video" || metadata.type === "shorts" || metadata.type === "live";
+    const ogType = isVideo ? "video.other" : "website";
+    const siteName = escapeHtml(metadata.siteName || "YouTube");
+
+    const videoUrl = metadata.videoUrl 
+        ? escapeHtml(metadata.videoUrl)
+        : (metadata.videoId ? `https://www.youtube.com/embed/${escapeHtml(metadata.videoId)}` : null);
+
+    const videoTags = isVideo && videoUrl ? `
+    <meta property="og:video" content="${videoUrl}">
+    <meta property="og:video:secure_url" content="${videoUrl}">
+    <meta property="og:video:type" content="text/html">
+    <meta property="og:video:width" content="1280">
+    <meta property="og:video:height" content="720">` : "";
 
     return `<!DOCTYPE html>
 <html lang="ko">
@@ -43,11 +53,10 @@ export const generateSocialMetaHtml = (
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 기본 메타데이터 -->
     <title>${title}</title>
     <meta name="description" content="${description}">
+    <link rel="canonical" href="${url}">
     
-    <!-- Open Graph (Facebook, KakaoTalk, Line 등) -->
     <meta property="og:type" content="${ogType}">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -55,15 +64,13 @@ export const generateSocialMetaHtml = (
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="720">
     <meta property="og:url" content="${url}">
-    <meta property="og:site_name" content="YouTube">
+    <meta property="og:site_name" content="${siteName}">${videoTags}
     
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
     <meta name="twitter:image" content="${thumbnail}">
     
-    <!-- 크롤러가 아닌 실제 사용자는 리다이렉트 -->
     <meta http-equiv="refresh" content="0; url=${safeRedirectUrl}">
 </head>
 <body>

@@ -42,6 +42,11 @@ export const isSocialCrawler = (userAgent: string): boolean => {
         "daumoa",               // Daum 크롤러
         "yeti",                 // Naver 크롤러
         "naverbot",             // Naver 봇
+        "pinterestbot",         // Pinterest 봇
+        "pinterest/",           // Pinterest 앱 크롤러
+        "snapchat",             // Snapchat 미리보기
+        "linebot",              // Line 봇
+        "line-poker",           // Line URL 미리보기
     ];
 
     // 인앱브라우저 패턴 (실제 사용자) - 이건 크롤러가 아님

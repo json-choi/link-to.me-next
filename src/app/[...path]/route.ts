@@ -38,20 +38,27 @@ export async function GET(
 
         // 2. 봇/크롤러 감지 -> 메타 태그 HTML 반환
         if (isSocialCrawler(userAgent)) {
+            let metadata;
             try {
-                const metadata = await getYouTubeMetadata(webUrl);
-                // 봇에게는 단순히 정보만 보여줌 (리다이렉트 X)
-                const htmlContent = generateSocialMetaHtml(metadata, webUrl);
-                
-                return new NextResponse(htmlContent, {
-                    headers: {
-                        "Content-Type": "text/html; charset=utf-8",
-                        "Cache-Control": "public, max-age=3600",
-                    },
-                });
+                metadata = await getYouTubeMetadata(webUrl);
             } catch (error) {
                 console.error("Metadata fetch error:", error);
+                metadata = {
+                    title: "YouTube",
+                    description: "YouTube에서 시청하세요",
+                    thumbnail: "https://www.youtube.com/img/desktop/yt_1200.png",
+                    url: webUrl,
+                    type: "unknown" as const,
+                };
             }
+            
+            const htmlContent = generateSocialMetaHtml(metadata, webUrl);
+            return new NextResponse(htmlContent, {
+                headers: {
+                    "Content-Type": "text/html; charset=utf-8",
+                    "Cache-Control": "public, max-age=3600",
+                },
+            });
         }
 
         // 3. 디바이스 감지
